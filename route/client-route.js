@@ -8,10 +8,10 @@ const Trainer = require('../model/trainer.js');
 const Task = require('../model/task.js');
 
 //router instance for actions taken by the client
-const router = module.exports = new Router()
+const router = module.exports = new Router();
 
 
-//sign up route (POST)
+//Client sign up route (POST)
 router.post('/client/signup', (req, res, next) => {
   let client = new Client(req.body);
 
@@ -26,7 +26,7 @@ router.post('/client/signup', (req, res, next) => {
 });
 
 
-//add a trainer route (POST)
+//add a trainer (POST)
 router.post('/client/:trainerUsername', (req, res, next) => {
   Trainer.findOne({username: req.params.trainerUsername})
   .then(newTrainer => {
@@ -40,7 +40,10 @@ router.post('/client/:trainerUsername', (req, res, next) => {
       res.json(secureUpdatedClient);
     });
   })
-  .catch(next);
+  .catch(err => {
+    console.log(err);
+    res.status(404).end('trainer not found');
+  })
 });
 
 //View Trainers
@@ -64,8 +67,36 @@ router.get('/trainers/:username*?', (req, res, next) => {
 });
 
 //view tasks (GET)
+router.get('/client/tasks', (req, res, next) => {
+  Client.findOne({username: req.query.client})
+  .populate('tasks')
+  .exec(function(err, list) {
+    if(err) {
+      console.log(err);
+      return next(createError(404, 'tasks not found'));
+    }
+    res.json(list.tasks);
+  })
+  .catch(err => {
+    console.log(err);
+    res.status(404).end('client not found');
+  });
+});
+
+//curl http://localhost:3000/client/tasks/?client="steve"
 
 
 //change task to completed (PUT)
+router.put('/client/tasks/:id', (req, res, next) => {
+  Task.findOneAndUpdate({_id: req.params.id}, {$set:{completed: true}}, {new: true}, function(err, task) {
+    if(err) {
+      console.log(err);
+      return next(createError(404, 'task not found'));
+    }
+    res.json(task);
+  });
+});
+//curl -X PUT -H 'Content-Type: application/json' http://localhost:3000/client/tasks/599cb0bcf91ad63fc94f7f8e
+
 
 //unsubscribe route (DELETE)

@@ -1,13 +1,12 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const createError = require('http-errors');
 
 var taskSchema = mongoose.Schema({
-  date: {type: Date},
+  date: {type: String}, //would do type Date but will say String for simplicity at the moment
   description: {type: String},
-  assignedBy: [{type: String, ref: 'trainers'}],
-  assignedTo: [{type: String, ref: 'clients'}],
+  assignedBy: {type: String, ref: 'trainers'},
+  assignedTo: {type: String, ref: 'clients'},
   completed: {type: Boolean, default: false}
   //after task has been completed, it should be deleted or hidden
 });
