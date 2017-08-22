@@ -25,15 +25,14 @@ router.post('/client/signup', (req, res, next) => {
   .catch(next);
 });
 
-
-//add a trainer (POST)
-router.post('/client/:trainerUsername', (req, res, next) => {
+//add a trainer (PUT)
+router.put('/client/:trainerUsername', (req, res, next) => {
   Trainer.findOne({username: req.params.trainerUsername})
   .then(newTrainer => {
-    Client.findOneAndUpdate({username: req.body.username}, {$set:{trainer:newTrainer.username}}, {new: true}, function(err, updatedClient) {
+    Client.findOneAndUpdate({username: req.query.client}, {$set:{trainer:newTrainer.username}}, {new: true}, function(err, updatedClient) {
       if(err) {
-        console.log(err); //TODO: change this
-        return;
+        console.log(err);
+        return(next(createError(404, 'client not found')));
       }
       let secureUpdatedClient = updatedClient.toObject();
       delete secureUpdatedClient['password'];
@@ -43,8 +42,9 @@ router.post('/client/:trainerUsername', (req, res, next) => {
   .catch(err => {
     console.log(err);
     res.status(404).end('trainer not found');
-  })
+  });
 });
+//curl -X PUT -H 'Content-Type:application/json' http://localhost:3000/client/mctest/?client=wanda
 
 //View Trainers
 router.get('/trainers/:username*?', (req, res, next) => {

@@ -26,11 +26,11 @@ router.post('/trainer/signup', (req, res, next) => {
 //curl -X POST -H 'Content-Type: application/json' -d '{"username":"mctest", "password":"test1234", "email":"mctest@test.com"}' http://localhost:3000/trainer/signup
 
 
-//add a client (POST)
-router.post('/trainer/addclient/:clientUsername', (req, res, next) => {
+//add a client (PUT)
+router.put('/trainer/addclient/:clientUsername', (req, res, next) => {
   Client.findOne({username: req.params.clientUsername})
   .then(client => {
-    Trainer.findOneAndUpdate({username: req.body.username}, {$push:{clients: client.username}}, {new: true}, (err, trainer) => {
+    Trainer.findOneAndUpdate({username: req.query.trainer}, {$push:{clients: client.username}}, {new: true}, (err, trainer) => {
       if(err) {
         console.log(err);
         return(next(createError(400)));
@@ -43,8 +43,7 @@ router.post('/trainer/addclient/:clientUsername', (req, res, next) => {
     res.status(404).end('client not found');
   });
 });
-//curl -X POST -H 'Content-Type: application/json' -d '{"username":"mctest"}' http://localhost:3000/addclient/bert
-
+//curl -X PUT -H 'Content-Type:application/json' http://localhost:3000/trainer/addclient/wanda/?trainer="mctest"
 
 //View your own clients (GET)
 router.get('/trainer/clients', (req, res, next) => {
