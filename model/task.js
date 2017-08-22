@@ -1,13 +1,12 @@
 'use strict';
 
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 var taskSchema = mongoose.Schema({
-  Date: {type: String},
-  email: {type: String, unique: true},
+  date: {type: String}, //would do type Date but will say String for simplicity at the moment
   description: {type: String},
-  assignedBy: [{type: String, ref: 'trainers'}],
-  assignedTo: [{type: String, ref: 'clients'}],
+  assignedBy: {type: String, ref: 'trainers'},
+  assignedTo: {type: String, ref: 'clients'},
   completed: {type: Boolean, default: false}
   //after task has been completed, it should be deleted or hidden
 });

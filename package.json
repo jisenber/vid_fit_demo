@@ -29,9 +29,10 @@
     "express-session": "^1.15.5",
     "http-errors": "^1.6.2",
     "mocha": "^3.5.0",
-    "mongoose": "^4.11.7",
+    "mongoose": "4.10.8",
     "morgan": "^1.8.2",
     "passport": "^0.4.0",
-    "passport-local-mongoose": "^4.1.0"
+    "passport-local-mongoose": "^4.1.0",
+    "superagent": "^3.6.0"
   }
 }
