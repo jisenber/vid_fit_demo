@@ -1,10 +1,10 @@
 'use strict';
 
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
+const createError = require('http-errors');
 
 var taskSchema = mongoose.Schema({
-  Date: {type: String},
-  email: {type: String, unique: true},
+  date: {type: Date},
   description: {type: String},
   assignedBy: [{type: String, ref: 'trainers'}],
   assignedTo: [{type: String, ref: 'clients'}],
